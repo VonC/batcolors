@@ -1,11 +1,15 @@
 # batcolors
 Levels of color used in a Windows bat script
 
+![BAT level colors](/batcolors.png)
+
 ## Description
 
 Add log-level-like colored headers to your script output:
 
 ## Usage
+
+Clone `batcolors` into your bat script project and:
 
 ```bat
 @echo off
