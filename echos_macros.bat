@@ -8,7 +8,7 @@ if "%script_dir%"=="" (
     setlocal enabledelayedexpansion
 )
 for %%i in ("%~dp0.") do SET "batdir=%%~fi"
-@echo "batdir='%batdir%'"
+rem @echo "batdir='%batdir%'"
 
 set _ok=call "%%batdir%%\echos.bat" :ok
 set _info=call "%%batdir%%\echos.bat" :info
