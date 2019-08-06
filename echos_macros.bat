@@ -6,9 +6,9 @@ if not "%1"=="" (
 )
 if "%script_dir%"=="" (
     setlocal enabledelayedexpansion
-) else (
-    set "batdir=%script_dir%\batcolors"
 )
+for %%i in ("%~dp0.") do SET "batdir=%%~fi"
+@echo "batdir='%batdir%'"
 
 set _ok=call "%%batdir%%\echos.bat" :ok
 set _info=call "%%batdir%%\echos.bat" :info
@@ -26,4 +26,5 @@ echo %batdir%
 %_info% "test msg"
 %_warning% "test msg"
 %_error% "test msg"
-%_fatal% "test msg" 2
+%_fatal% "test msg" 3
+echo all done macros
