@@ -30,6 +30,18 @@ call %script_dir%\batcolors\echos_macros.bat
 echo done
 ```
 
+### NOCOLORS
+
+If you do not want [ANSI escape code](https://en.wikipedia.org/wiki/ANSI_escape_code), simply `set NOCOLORS=1`.
+
+Then unset it (`set NOCOLORS=`), and the next `%_ok/info/...%` call will display colors again.
+
+### FATALNOEXIT"
+
+If you don't want to exit on a `%_fatal%` call, `set FATALNOEXIT=1` first.
+
+Then, unset it (`set FATALNOEXIT=`), and the next `%_fatal%` call will exit the script.
+
 ## License: MIT
 
 [LICENSE](LICENSE)
