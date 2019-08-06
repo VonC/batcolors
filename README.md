@@ -22,13 +22,19 @@ set script_dir=%script_dir%\..
 
 call %script_dir%\batcolors\echos_macros.bat
 
-%_ok% "test msg"
-%_info% "test msg"
-%_warning% "test msg"
-%_error% "test msg"
-%_fatal% "test msg and terminate" 3
+%_ok%      "Result matches what was expected"
+%_info%    "Describe what is about to be done"
+%_warning% "Result was not expected, but non-blocking"
+%_error%   "Result is wrong"
+%_fatal%   "Program must stop and exit" 1
+
+REM final echo should not be displayed:
 echo done
 ```
+
+`%_error%` will not exit your script, while %_fatal% will.  
+Any line *after* `%_fatal%` will not be executed (unless `FATALNOEXIT` is set. See below)
+
 
 ### NOCOLORS
 
@@ -36,7 +42,7 @@ If you do not want [ANSI escape code](https://en.wikipedia.org/wiki/ANSI_escape_
 
 Then unset it (`set NOCOLORS=`), and the next `%_ok/info/...%` call will display colors again.
 
-### FATALNOEXIT"
+### FATALNOEXIT
 
 If you don't want to exit on a `%_fatal%` call, `set FATALNOEXIT=1` first.
 
