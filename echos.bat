@@ -7,41 +7,72 @@ rem https://stackoverflow.com/questions/10534911/how-can-i-exit-a-batch-file-fro
 rem https://stackoverflow.com/questions/2048509/how-to-echo-with-different-colors-in-the-windows-command-line
 rem https://stackoverflow.com/questions/28810194/how-to-pass-a-list-of-strings-to-a-batch-script-as-a-parameter
 
-@SET ASCII27=
-rem @SET ASCII27=← 
+set ASCII27=
+rem set ASCII27=← 
 if "%1"=="" ( goto :test )
 call %*
 exit /b
 
 :ok
+if not "%NOCOLORS%"=="" goto:oknc
 echo %ASCII27%[42;97m OK    %ASCII27%[0m: %~1%
+goto:eof
+:oknc
+echo  OK    : %~1% 1>&2
 goto:eof
 
 :info
+if not "%NOCOLORS%"=="" goto:infonc
 echo %ASCII27%[106;30m INFO  %ASCII27%[0m: %~1%
+goto:eof
+:infonc
+echo  INFO  : %~1% 1>&2
 goto:eof
 
 :warning
+if not "%NOCOLORS%"=="" goto:warningnc
 echo %ASCII27%[103;30m WARN  %ASCII27%[0m: %~1%
+goto:eof
+:warningnc
+echo  WARN  : %~1% 1>&2
 goto:eof
 
 :error
+if not "%NOCOLORS%"=="" goto:errornc
 echo %ASCII27%[101;97m ERROR %ASCII27%[0m: %~1% 1>&2
+goto:eof
+:errornc
+echo  ERROR : %~1% 1>&2
 goto:eof
 
 :fatal
+if not "%NOCOLORS%"=="" goto:fatalnc
 rem %Windir%\System32\WindowsPowerShell\v1.0\Powershell.exe write-host -foregroundcolor Red ERROR: %1
 echo %ASCII27%[41;97m FATAL %~2 %ASCII27%[0m: %~1% 1>&2
 call :ExitBatch %2
 goto:eof
+:fatalnc
+echo  FATAL %~2 : %~1% 1>&2
+call :ExitBatch %2
+goto:eof
 
 :test
-call:ok "role name expected"
-call:info "role name expected"
-call:warning "role name expected"
-call:error "role name expected"
-call:fatal "role name expected" 1
-echo ok
+set NOCOLORS=
+set FATALNOEXIT=1
+call:ok "Result matches what was expected"
+call:info "Describe what is about to be done"
+call:warning "Result was not expected, but non-blocking"
+call:error "Result is wrong"
+call:fatal "Program must stop and exit" 1
+echo ---- NOCOLORS=1 ----
+set NOCOLORS=1
+set FATALNOEXIT=
+call:ok "(no colors) Result matches what was expected"
+call:info "(no colors) Describe what is about to be done"
+call:warning "(no colors) Result was not expected, but non-blocking"
+call:error "(no colors) Result is wrong"
+call:fatal "(no colors) The program must exit and stop" 2
+echo alldone
 goto:eof
 
 rem https://stackoverflow.com/questions/10534911/how-can-i-exit-a-batch-file-from-within-a-function/10537432
@@ -50,6 +81,7 @@ rem => https://stackoverflow.com/questions/3227796/exit-batch-script-from-inside
 
 :ExitBatch - Cleanly exit batch processing, regardless how many CALLs
 @echo off
+if not "%FATALNOEXIT%"=="" goto:eof
 if not exist "%temp%\ExitBatchYes.txt" call :buildYes
 call :CtrlC <"%temp%\ExitBatchYes.txt" 1>nul 2>&1
 :CtrlC
