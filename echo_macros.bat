@@ -23,18 +23,23 @@ call :define_fatal_echo    "$echo_fatal" "41;97"    " FATAL "
 call :define_trampoline $define_prefixed_echo :define_prefixed_echo
 exit /b
 
-:define_trampoline
+::: Defines a macro, that calls a function in this file
+:define_trampoline <macro_name> <function_name>
 set ^"%~1=call "%~d0\:%2:\..\%~pnx0""
 exit /b
 
 ::: Creates an echo macro, the macro can be used by
 ::: <macro_name> "My text to display"
 :define_prefixed_echo <macro_name> <color_code> "<prefix_string>"
+
+REM *** This creates a variable that is used to define multi line macros
+REM *** Only two characters are in \n "<caret><linefeed>"
 (set \n=^^^
 %= empty, do not remove this=%
 )
 
 REM *** defining the macro
+REM *** The first FOR creates the ASCII-ESCAPE character (0x1B) in the %%E parameter
 for /F "delims=#" %%E in ('"prompt #$E# & for %%E in (1) do rem"') do ^
 set ^"%~1=for %%# in (1 2) do if %%#==2 (%\n%
     setlocal EnableDelayedExpansion%\n%
