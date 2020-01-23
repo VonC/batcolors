@@ -48,7 +48,7 @@ set ^"%~1=for %%# in (1 2) do if %%#==2 (%\n%
         endlocal%\n%
         endlocal%\n%
         if defined NOCOLORS (%\n%
-            echo(%~3%%~2%\n%
+            echo(%~3: %%~2%\n%
         ) ELSE (%\n%
             echo(%%E[%~2m%~3%%E[0m: %%~2%\n%
         )%\n%
@@ -78,7 +78,7 @@ set ^"%~1=for %%# in (1 2) do if %%#==2 (%\n%
         endlocal%\n%
         endlocal%\n%
         if defined NOCOLORS (%\n%
-            echo(%~3%%1%%~2%\n%
+            echo(%~3%%1: %%~2%\n%
         ) ELSE (%\n%
             echo(%%E[%~2m%~3%%1%%E[0m: %%~2%\n%
         )%\n%
