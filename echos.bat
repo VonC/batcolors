@@ -37,6 +37,14 @@ goto:eof
 echo  WARN  : %~1% 1>&2
 goto:eof
 
+:task
+if not "%NOCOLORS%"=="" goto:tasknc
+echo %ASCII27%[106;30m TASK%ASCII27%[0m%ASCII27%[103;30m=^>%ASCII27%[0m: %~1%
+goto:eof
+:tasknc
+echo  TASK=^>: %~1% 1>&2
+goto:eof
+
 :error
 if not "%NOCOLORS%"=="" goto:errornc
 echo %ASCII27%[101;97m ERROR %ASCII27%[0m: %~1% 1>&2
@@ -62,6 +70,7 @@ set FATALNOEXIT=1
 call:ok "Result matches what was expected"
 call:info "Describe what is about to be done"
 call:warning "Result was not expected, but non-blocking"
+call:task "Result means you need to take action"
 call:error "Result is wrong"
 call:fatal "Program must stop and exit" 1
 echo ---- NOCOLORS=1 ----
@@ -70,6 +79,7 @@ set FATALNOEXIT=
 call:ok "(no colors) Result matches what was expected"
 call:info "(no colors) Describe what is about to be done"
 call:warning "(no colors) Result was not expected, but non-blocking"
+call:task "(no colors) Result means you need to take action"
 call:error "(no colors) Result is wrong"
 call:fatal "(no colors) The program must exit and stop" 2
 echo alldone
