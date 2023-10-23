@@ -34,7 +34,7 @@ REM final echo should not be displayed:
 echo done
 ```
 
-`%_error%` will not exit your script, while %_fatal% will.  
+`%_error%` will not exit your script, while `%_fatal%` will.  
 Any line *after* `%_fatal%` will not be executed (unless `FATALNOEXIT` is set. See below)
 
 
@@ -64,7 +64,7 @@ if "%script_dir%"=="" (
 ```
 
 - if not called in standalone, then `script_dir` would not be empty: no need to call `echos_macros.bat` again)
-- if called in standalone, , then `script_dir` would be empty: call `echos_macros.bat`, again to export its macro definitions in your current content.
+- if called in standalone, then `script_dir` would be empty: call `echos_macros.bat`, again to export its macro definitions in your current content.
 
 ### set "ECHO_STATE=ON"
 
