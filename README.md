@@ -1,6 +1,8 @@
 # batcolors
 Levels of color used in a Windows bat script
 
+Type `echos` or `echos.bat` in the root folder of this repository, and you get a demo:
+
 ![BAT level colors](/batcolors.png)
 
 ## Description
