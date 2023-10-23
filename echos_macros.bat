@@ -1,12 +1,16 @@
 @echo off
 rem https://ss64.com/nt/syntax-macros.html
 
+
+if "%1"=="export" ( goto:start_bc )
+
 if not "%1"=="" (
     setlocal enabledelayedexpansion
 )
 if "%script_dir%"=="" (
     setlocal enabledelayedexpansion
 )
+:start_bc
 for %%i in ("%~dp0.") do SET "batdir=%%~fi"
 rem @echo "batdir='%batdir%'"
 
@@ -17,9 +21,8 @@ set _task=call "%%batdir%%\echos.bat" :task
 set _error=call "%%batdir%%\echos.bat" :error
 set _fatal=call "%%batdir%%\echos.bat" :fatal
 
-if "%1"=="" (
-    goto:eof
-)
+if "%1"=="" ( goto:eof )
+if "%1"=="export" ( goto:eof )
 
 for %%i in ("%~dp0.") do SET "batdir=%%~fi"
 echo %batdir%
