@@ -50,6 +50,30 @@ If you don't want to exit on a `%_fatal%` call, `set FATALNOEXIT=1` first.
 
 Then, unset it (`set FATALNOEXIT=`), and the next `%_fatal%` call will exit the script.
 
+### export
+
+If you use `call %script_dir%\batcolors\echos_macros.bat export` (with the `export` parameter), it keeps the current context, and does not use `setlocal enabledelayedexpansion`.
+
+Useful when the script is supposed to be called by another one (which has already called `echos_macros.bat`), but you want to call/test that script in standalone:
+
+```bat
+if "%script_dir%"=="" (
+    for %%i in ("%~dp0.") do SET "script_dir=%%~fi"
+    call !script_dir!\batcolors\echos_macros.bat export
+)
+```
+
+- if not called in standalone, then `script_dir` would not be empty: no need to call `echos_macros.bat` again)
+- if called in standalone, , then `script_dir` would be empty: call `echos_macros.bat`, again to export its macro definitions in your current content.
+
+### set "ECHO_STATE=ON"
+
+If your script includes a `@echo on`, having `ECHO_STATE=ON` first will make sure the colored echo does not reset the echo mode, keeping it ON.
+
+```bat
+cmd /V /C "set "ECHO_STATE=ON" && call your_script.bat"
+```
+
 ## License: MIT
 
 [LICENSE](LICENSE)
