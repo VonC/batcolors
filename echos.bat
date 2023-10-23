@@ -16,42 +16,42 @@ exit /b
 :ok
 if not "%NOCOLORS%"=="" goto:oknc
 echo %ASCII27%[42;97m OK    %ASCII27%[0m: %~1%
-goto:eof
+goto:check_echo_state
 :oknc
 echo  OK    : %~1% 1>&2
-goto:eof
+goto:check_echo_state
 
 :info
 if not "%NOCOLORS%"=="" goto:infonc
 echo %ASCII27%[106;30m INFO  %ASCII27%[0m: %~1%
-goto:eof
+goto:check_echo_state
 :infonc
 echo  INFO  : %~1% 1>&2
-goto:eof
+goto:check_echo_state
 
 :warning
 if not "%NOCOLORS%"=="" goto:warningnc
 echo %ASCII27%[103;30m WARN  %ASCII27%[0m: %~1%
-goto:eof
+goto:check_echo_state
 :warningnc
 echo  WARN  : %~1% 1>&2
-goto:eof
+goto:check_echo_state
 
 :task
 if not "%NOCOLORS%"=="" goto:tasknc
 echo %ASCII27%[106;30m TASK%ASCII27%[0m%ASCII27%[103;30m=^>%ASCII27%[0m: %~1%
-goto:eof
+goto:check_echo_state
 :tasknc
 echo  TASK=^>: %~1% 1>&2
-goto:eof
+goto:check_echo_state
 
 :error
 if not "%NOCOLORS%"=="" goto:errornc
 echo %ASCII27%[101;97m ERROR %ASCII27%[0m: %~1% 1>&2
-goto:eof
+goto:check_echo_state
 :errornc
 echo  ERROR : %~1% 1>&2
-goto:eof
+goto:check_echo_state
 
 :fatal
 if not "%NOCOLORS%"=="" goto:fatalnc
@@ -62,6 +62,10 @@ goto:eof
 :fatalnc
 echo  FATAL %~2 : %~1% 1>&2
 call :ExitBatch %2
+goto:eof
+
+:check_echo_state
+if "%ECHO_STATE%"=="ON" (@echo on)
 goto:eof
 
 :test
