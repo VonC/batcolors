@@ -77,6 +77,10 @@ call:warning "Result was not expected, but non-blocking"
 call:task "Result means you need to take action"
 call:error "Result is wrong"
 call:fatal "Program must stop and exit" 1
+echo ---- ENV VARS ----
+call:info "setting ECHO_STATE=ON allows for `@echo on` to persists after a batcolor echo"
+call:info "setting FATALNOEXIT=1 allows for a fatal call to not exit the current batch script"
+call:info "setting NOCOLORS=1 allows for ASCII output without ASCII escape color codes"
 echo ---- NOCOLORS=1 ----
 set NOCOLORS=1
 set FATALNOEXIT=
