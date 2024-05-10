@@ -105,6 +105,9 @@ goto:eof
 :buildYes - Establish a Yes file for the language used by the OS
 pushd "%temp%"
 set "yes="
+if exist ExitBatchYes.txt (
+  del ExitBatchYes.txt
+)
 copy nul ExitBatchYes.txt >nul
 for /f "delims=(/ tokens=2" %%Y in (
   '"copy /-y nul ExitBatchYes.txt <nul"'
