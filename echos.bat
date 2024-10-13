@@ -99,6 +99,11 @@ rem => https://stackoverflow.com/questions/3227796/exit-batch-script-from-inside
 
 :ExitBatch - Cleanly exit batch processing, regardless how many CALLs
 @echo off
+if defined echos_standalone (
+  if exist "%echos_standalone%" (
+    del "%echos_standalone%"
+  )
+)
 if not "%FATALNOEXIT%"=="" goto:eof
 if not exist "%temp%\ExitBatchYes.txt" call :buildYes
 call :CtrlC <"%temp%\ExitBatchYes.txt" 1>nul 2>&1
