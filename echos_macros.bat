@@ -3,11 +3,14 @@ rem https://ss64.com/nt/syntax-macros.html
 
 
 if "%1"=="export" ( goto:start_bc )
+if "%1"=="unset" ( goto:unset )
 
 if not "%1"=="" (
+    call:unset
     setlocal enabledelayedexpansion
 )
 if "%script_dir%"=="" (
+    call:unset
     setlocal enabledelayedexpansion
 )
 :start_bc
@@ -33,3 +36,12 @@ echo %batdir%
 %_error% "test msg"
 %_fatal% "test msg" 3
 echo all done macros
+goto:eof
+
+:unset
+set "_error="
+set "_fatal="
+set "_info="
+set "_ok="
+set "_task="
+set "_warning="
