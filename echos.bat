@@ -14,6 +14,7 @@ call %*
 exit /b
 
 :ok
+if defined ECHOS_OFF goto:check_echo_state
 if not "%NOCOLORS%"=="" goto:oknc
 if defined ECHOS_PRE_FILE ( call:msg "%ECHOS_PRE_FILE%" "   %ASCII27%[42;97m    %ASCII27%[0m  " )
 echo %ASCII27%[42;97m OK    %ASCII27%[0m: %~1%
@@ -26,6 +27,7 @@ if defined ECHOS_POST_FILE ( call:msg "%ECHOS_POST_FILE%" "       %ASCII27%[0m  
 goto:check_echo_state
 
 :info
+if defined ECHOS_OFF goto:check_echo_state
 if not "%NOCOLORS%"=="" goto:infonc
 if defined ECHOS_PRE_FILE ( call:msg "%ECHOS_PRE_FILE%" "     %ASCII27%[106;30m  %ASCII27%[0m  " )
 echo %ASCII27%[106;30m INFO  %ASCII27%[0m: %~1%
@@ -38,6 +40,7 @@ if defined ECHOS_POST_FILE ( call:msg "%ECHOS_POST_FILE%" "       %ASCII27%[0m  
 goto:check_echo_state
 
 :warning
+if defined ECHOS_OFF goto:check_echo_state
 if not "%NOCOLORS%"=="" goto:warningnc
 if defined ECHOS_PRE_FILE ( call:msg "%ECHOS_PRE_FILE%" "     %ASCII27%[103;30m  %ASCII27%[0m  " )
 echo %ASCII27%[103;30m WARN  %ASCII27%[0m: %~1%
@@ -50,6 +53,7 @@ if defined ECHOS_POST_FILE ( call:msg "%ECHOS_POST_FILE%" "       %ASCII27%[0m  
 goto:check_echo_state
 
 :task
+if defined ECHOS_OFF goto:check_echo_state
 if not "%NOCOLORS%"=="" goto:tasknc
 if defined ECHOS_PRE_FILE ( call:msg "%ECHOS_PRE_FILE%" "     %ASCII27%[103;30m  %ASCII27%[0m  " )
 echo %ASCII27%[106;30m TASK%ASCII27%[0m%ASCII27%[103;30m=^>%ASCII27%[0m: %~1%
@@ -62,6 +66,7 @@ if defined ECHOS_POST_FILE ( call:msg "%ECHOS_POST_FILE%" "       %ASCII27%[0m  
 goto:check_echo_state
 
 :error
+if defined ECHOS_OFF goto:check_echo_state
 if not "%NOCOLORS%"=="" goto:errornc
 if defined ECHOS_PRE_FILE ( call:msg   "%ECHOS_PRE_FILE%" "      %ASCII27%[101;97m %ASCII27%[0m  " )
 echo %ASCII27%[101;97m ERROR %ASCII27%[0m: %~1% 1>&2
@@ -102,6 +107,7 @@ call:task "Result means you need to take action"
 call:error "Result is wrong"
 call:fatal "Program must stop and exit" 1
 echo ---- ENV VARS ----
+call:info "setting ECHOS_OFF=[any value] means no OK, INFO, WARNING, TASK, or ERROR messages will be displayed. Only FATAL messages."
 call:info "setting ECHO_STATE=ON allows for `@echo on` to persists after a batcolor echo"
 call:info "setting FATALNOEXIT=1 allows for a fatal call to not exit the current batch script"
 call:info "setting NOCOLORS=1 allows for ASCII output without ASCII escape color codes"

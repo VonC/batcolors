@@ -44,6 +44,12 @@ If you do not want [ANSI escape code](https://en.wikipedia.org/wiki/ANSI_escape_
 
 Then unset it (`set NOCOLORS=`), and the next `%_ok/info/...%` call will display colors again.
 
+### ECHOS_OFF
+
+Setting `ECHOS_OFF=1` will disable all echos (no OK, INFO, WARNING, TASK or ERROR message), except the FATAL one.
+
+Then unset it (`set ECHOS_OFF=`), and the next `%_ok/info/...%` call will display messages again.
+
 ### FATALNOEXIT
 
 If you don't want to exit on a `%_fatal%` call, `set FATALNOEXIT=1` first.
