@@ -3,7 +3,7 @@ Levels of color used in a Windows bat script
 
 Type `echos` or `echos.bat` in the root folder of this repository, and you get a demo:
 
-![BAT level colors](/batcolors.png)
+![BAT level colors](batcolors.png)
 
 ## Description
 
@@ -50,6 +50,22 @@ If you don't want to exit on a `%_fatal%` call, `set FATALNOEXIT=1` first.
 
 Then, unset it (`set FATALNOEXIT=`), and the next `%_fatal%` call will exit the script.
 
+### PRE-POST multi-line messages
+
+If you want to display a multi-line message, use `ECHOS_PRE_FILE` and `ECHOS_POST_FILE` referencing a file full pathname with a multi-line message in it.
+
+```bat
+(
+echo PRE OK line 1: Write a multi-line message in a file 'xxx.txt'
+echo PRE OK line 2: the name of that file is yours to chose
+echo PRE OK line 3: '_' means empty line
+echo _
+) > "pre_FILE.txt"
+set "ECHOS_PRE_FILE=pre_FILE.txt"
+%_ok% " An OK message with a prefix message"
+REM don't forget to reset the variable
+set "ECHOS_PRE_FILE=
+```
 ### export
 
 If you use `call %script_dir%\batcolors\echos_macros.bat export` (with the `export` parameter), it keeps the current context, and does not use `setlocal enabledelayedexpansion`.
