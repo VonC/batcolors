@@ -123,29 +123,9 @@ echo ---- PRE and POST MSG VARS ----
 set NOCOLORS=
 call:set_pre_post_example_FILE "OK"
 call:ok "An OK message with a prefix and a post message" && echo.
-call:set_pre_post_example_FILE "INFO"
-call:info "An INFO message with a prefix and a post message" && echo.
-call:set_pre_post_example_FILE "WARNING"
-call:warning "A WARNING message with a prefix and a post message" && echo.
-call:set_pre_post_example_FILE "TASK"
-call:task "A TASK message with a prefix and a post message" && echo.
-call:set_pre_post_example_FILE "ERROR"
-call:error "An ERROR message with a prefix and a post message" && echo.
-call:set_pre_post_example_FILE "FATAL"
-call:fatal "A FATAL message with a prefix and a post message" 1 && echo.
 echo ---- NOCOLORS=1 with PRE and POST MSG ----
 set NOCOLORS=1
 set FATALNOEXIT=
-call:set_pre_post_example_FILE "OK"
-call:ok "An OK message (no colors) with a prefix and a post message" && echo ----
-call:set_pre_post_example_FILE "INFO"
-call:info "An INFO message (no colors) with a prefix and a post message" && echo ----
-call:set_pre_post_example_FILE "WARNING"
-call:warning "A WARNING message (no colors) with a prefix and a post message" && echo ----
-call:set_pre_post_example_FILE "TASK"
-call:task "A TASK message (no colors) with a prefix and a post message" && echo ----
-call:set_pre_post_example_FILE "ERROR"
-call:error "An ERROR message (no colors) with a prefix and a post message" && echo ----
 call:set_pre_post_example_FILE "FATAL"
 call:fatal "A FATAL message (no colors) with a prefix and a post message" 1
 echo alldone
