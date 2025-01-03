@@ -60,5 +60,6 @@ set "count="
 set "prefix="
 set "CHECK_DEBUG_ECHOS="
 set "DEBUG_ECHOS="
+set "_stack_call="
 goto:eof
 
