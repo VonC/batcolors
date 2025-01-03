@@ -238,6 +238,7 @@ set "echos_stack_file=%echos_stack_dir%\%echos_stack_file%"
 goto:eof
 
 :test
+set "CHECK_DEBUG_ECHOS=echo %DEBUG_ECHOS% | findstr /C:true >nul &&
 set NOCOLORS=
 set FATALNOEXIT=1
 call:ok "Result matches what was expected"
@@ -277,6 +278,7 @@ rem => https://stackoverflow.com/questions/3227796/exit-batch-script-from-inside
 
 :ExitBatch - Cleanly exit batch processing, regardless how many CALLs
 @echo off
+set "CHECK_DEBUG_ECHOS=
 if defined echos_standalone (
   if exist "%echos_standalone%" (
     del "%echos_standalone%"
