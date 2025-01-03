@@ -97,6 +97,146 @@ goto:eof
 if "%ECHO_STATE%"=="ON" (@echo on)
 goto:eof
 
+:compute_prefix_stack
+if not defined ECHOS_STACK ( goto:eof )
+call:read_stack
+call:compute_stack_warning "%~1"
+set "echos_stack_spaces="
+if %echos_stack_list_count% gtr 1 (
+  for /L %%i in (2,1,%echos_stack_list_count%) do (
+    set "echos_stack_spaces=!echos_stack_spaces!  "
+  )
+)
+set "prefix_stack=%echos_stack_spaces%"
+set "echos_stack_warning="
+if defined echos_stack_warning_no_stack (
+  set "echos_stack_warning=X"
+  if not defined NOCOLORS ( set "echos_stack_warning=%ASCII27%[103;31m!echos_stack_warning!%ASCII27%[0m" )
+  %CHECK_DEBUG_ECHOS% echo 01 echos_stack_warning='!echos_stack_warning!' 01 NOCOLORS='%NOCOLORS%'
+)
+if defined echos_stack_warning_legacy_stack (
+  set "echos_stack_warning=L"
+  %CHECK_DEBUG_ECHOS% echo 020 echos_stack_warning='!echos_stack_warning!' 020 NOCOLORS='%NOCOLORS%'
+  if not defined NOCOLORS ( set "echos_stack_warning=%ASCII27%[106;31m!echos_stack_warning!%ASCII27%[0m" )
+  %CHECK_DEBUG_ECHOS% echo 02 echos_stack_warning='!echos_stack_warning!' 02 NOCOLORS='%NOCOLORS%'
+)
+if defined echos_stack_warning_wrong_stack (
+  if not defined NOCOLORS ( set "echos_stack_warning=%ASCII27%[101;33mW%ASCII27%[0m!echos_stack_warning!" )
+)
+%CHECK_DEBUG_ECHOS% echo 11 echos_stack_warning='%echos_stack_warning%' 11
+if defined echos_stack_warning ( set "prefix_stack=%prefix_stack%%echos_stack_warning% "
+%CHECK_DEBUG_ECHOS% echo 22 echos_stack_warning='%echos_stack_warning%' 22 )
+if defined echos_last_stack ( set "prefix_stack=%prefix_stack%⁅%echos_last_stack%⁆ ")
+
+%CHECK_DEBUG_ECHOS% echo echos_stack_warning='%echos_stack_warning%', prefix_stack='%prefix_stack%', echos_stack_list='%echos_stack_list%', echos_last_stack='%echos_last_stack%', echos_stack_spaces='%echos_stack_spaces%', echos_stack_list_count='%echos_stack_list_count%'
+goto:eof
+
+:stack
+call:read_stack
+rem set "ECHOS_STACK"
+if not defined echos_stack_list (
+  set "echos_stack_list=%~1"
+) else (
+  if not "%echos_last_stack%"=="%~1" (
+    set "echos_stack_list=%echos_stack_list%/%~1"
+    set "echos_last_stack=%~1"
+    set /a echos_stack_list_count+=1
+  )
+)
+echo %echos_stack_list%>"%echos_stack_file%"
+%CHECK_DEBUG_ECHOS% echo :stack '%~1' added to echos_stack_list='%echos_stack_list%' in echos_stack_file '%echos_stack_file%': echos_last_stack='%echos_last_stack%', echos_stack_list_count='%echos_stack_list_count%'
+goto:eof
+
+:empty_stack
+set "echos_stack_list="
+set "echos_last_stack="
+set "echos_stack_list_count=0"
+del %echos_stack_file% 2>NUL
+verify >nul
+goto:eof
+
+:unstack
+call:read_stack
+if not defined echos_stack_list ( call:empty_stack & goto:eof )
+if "%echos_stack_list%"=="%echos_last_stack%" ( call:empty_stack & goto:eof )
+
+set "tokens_count=1"
+set /a echos_stack_list_count-=1
+set "echos_stack_list_new="
+:read_new_stack_loop
+for /F "delims=/ tokens=1*" %%a in ("%echos_stack_list%") do (
+  if not defined echos_stack_list_new (
+    set "echos_stack_list_new=%%a"
+  ) else (
+    set "echos_stack_list_new=!echos_stack_list_new!/%%a"
+  )
+  set /a tokens_count+=1
+  if "%tokens_count%"=="%echos_stack_list_count%" (
+    set "echos_last_stack=%%a"
+    goto:read_new_stack_break
+  )
+  set "echos_stack_list=%%b"
+  goto:read_new_stack_loop
+)
+:read_new_stack_break
+set "echos_stack_list=%echos_stack_list_new%"
+%CHECK_DEBUG_ECHOS% echo :unstack echos_stack_list='%echos_stack_list%', echos_last_stack='%echos_last_stack%', echos_stack_list_count='%echos_stack_list_count%'
+echo %echos_stack_list%>%echos_stack_file%
+verify >nul
+goto:eof
+
+:read_stack
+call:get_stack_filename
+set "echos_stack_list="
+set "echos_stack_list_count=0"
+set "echos_last_stack="
+if not exist "%echos_stack_file%" goto:eof
+for /f "tokens=* delims=" %%a in ('type "%echos_stack_file%"') do (
+  set "echos_stack_list=%%a"
+)
+set "echos_stack_list_tmp=%echos_stack_list%"
+:read_stack_loop
+for /F "delims=/ tokens=1*" %%a in ("%echos_stack_list_tmp%") do (
+  set "echos_last_stack=%%a"
+  set /a echos_stack_list_count+=1
+  if not "%%b"=="" (
+    set "echos_stack_list_tmp=%%b"
+    goto:read_stack_loop
+  )
+)
+if not defined echos_last_stack ( set "echos_last_stack=%echos_stack_list%" )
+%CHECK_DEBUG_ECHOS% echo :read_stack echos_stack_list='%echos_stack_list%', echos_last_stack='%echos_last_stack%', echos_stack_list_count='%echos_stack_list_count%'
+goto:eof
+
+:compute_stack_warning
+set "echos_stack_warning_no_stack="
+set "echos_stack_warning_wrong_stack="
+set "echos_stack_warning_legacy_stack="
+set "echos_stack_warning_msg=%~1"
+if not defined echos_stack_warning_msg ( goto:eof )
+:echos_stack_warning_loop
+if "%echos_stack_warning_msg%"=="" ( goto:echos_stack_warning_break )
+if "%echos_stack_warning_msg:~0,1%"==" " (
+  set "echos_stack_warning_msg=%echos_stack_warning_msg:~1%"
+  goto:echos_stack_warning_loop
+)
+:echos_stack_warning_break
+if "%echos_stack_warning_msg:~0,1%"=="[" (
+  set "echos_stack_warning_legacy_stack=1"
+) else ( if not defined echos_last_stack ( set "echos_stack_warning_no_stack=1" ) )
+rem if not "%echos_stack_ba%"=="%echos_last_stack%" ( set "echos_stack_warning_wrong_stack=1" )
+
+%CHECK_DEBUG_ECHOS% echo :compute_stack_warning echos_stack_warning_no_stack='%echos_stack_warning_no_stack%', echos_stack_warning_legacy_stack='%echos_stack_warning_legacy_stack%'
+rem , echos_stack_warning_wrong_stack='%echos_stack_warning_wrong_stack%'
+goto:eof
+
+:get_stack_filename
+for %%i in ("%~dp0") do SET "echos_stack_dir=%%~fi"
+set "echos_stack_file=%~nx0"
+set "echos_stack_file=%echos_stack_file:.bat=.stack%"
+set "echos_stack_file=%echos_stack_dir%\%echos_stack_file%"
+goto:eof
+
 :test
 set NOCOLORS=
 set FATALNOEXIT=1
