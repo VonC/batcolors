@@ -17,12 +17,17 @@ if "%script_dir%"=="" (
 for %%i in ("%~dp0.") do SET "batdir=%%~fi"
 rem @echo "batdir='%batdir%'"
 
-set _ok=call "%%batdir%%\echos.bat" :ok
-set _info=call "%%batdir%%\echos.bat" :info
-set _warning=call "%%batdir%%\echos.bat" :warning
-set _task=call "%%batdir%%\echos.bat" :task
-set _error=call "%%batdir%%\echos.bat" :error
-set _fatal=call "%%batdir%%\echos.bat" :fatal
+set "_ok=call:call_echos_stack 2>NUL & call "%%batdir%%\echos.bat" :ok"
+set "_info=call:call_echos_stack 2>NUL & call "%%batdir%%\echos.bat" :info"
+set "_warning=call:call_echos_stack 2>NUL & call "%%batdir%%\echos.bat" :warning"
+set "_task=call:call_echos_stack 2>NUL & call "%%batdir%%\echos.bat" :task"
+set "_error=call:call_echos_stack 2>NUL & call "%%batdir%%\echos.bat" :error"
+set "_fatal=call:call_echos_stack 2>NUL & call "%%batdir%%\echos.bat" :fatal"
+set "_stack=call "%%batdir%%\echos.bat" :stack"
+set "_stack_call=call "%%batdir%%\echos.bat" :stack & call"
+set "_unstack=call "%%batdir%%\echos.bat" :stack"
+
+set "CHECK_DEBUG_ECHOS=echo %DEBUG_ECHOS% | findstr /C:true >nul &&
 
 if "%1"=="" ( goto:eof )
 if "%1"=="export" ( goto:eof )
@@ -45,3 +50,15 @@ set "_info="
 set "_ok="
 set "_task="
 set "_warning="
+set "_stack="
+set "_unstack="
+set "echos_last_stack="
+set "echos_nx="
+set "echos_stack_list="
+set "echos_stack_spaces="
+set "count="
+set "prefix="
+set "CHECK_DEBUG_ECHOS="
+set "DEBUG_ECHOS="
+goto:eof
+
