@@ -23,9 +23,9 @@ set "_warning=call:call_echos_stack 2>NUL & call "%%batdir%%\echos.bat" :warning
 set "_task=call:call_echos_stack 2>NUL & call "%%batdir%%\echos.bat" :task"
 set "_error=call:call_echos_stack 2>NUL & call "%%batdir%%\echos.bat" :error"
 set "_fatal=call:call_echos_stack 2>NUL & call "%%batdir%%\echos.bat" :fatal"
-set "_stack=call "%%batdir%%\echos.bat" :stack"
-set "_stack_call=call "%%batdir%%\echos.bat" :stack & call"
-set "_unstack=call "%%batdir%%\echos.bat" :stack"
+set "_stack=call:call_echos_stack"
+set "_stack_call=call:call_echos_stack & call"
+set "_unstack=call "%%batdir%%\echos.bat" :unstack"
 
 set "CHECK_DEBUG_ECHOS=echo %DEBUG_ECHOS% | findstr /C:true >nul &&
 

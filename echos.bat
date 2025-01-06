@@ -166,6 +166,7 @@ echo %echos_stack_list%>"%echos_stack_file%"
 goto:eof
 
 :empty_stack
+%CHECK_DEBUG_ECHOS% echo :empty_stack
 set "echos_stack_list="
 set "echos_last_stack="
 set "echos_stack_list_count=0"
