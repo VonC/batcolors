@@ -177,6 +177,10 @@ goto:eof
 :unstack
 call:read_stack
 if not defined echos_stack_list ( call:empty_stack & goto:eof )
+if not "%~1"=="" (
+  :: if a param is provided, only unstack if what is unstacked is the param. If not, return immediately
+  if not "%~1"=="%echos_last_stack%" ( goto:eof )
+)
 if "%echos_stack_list%"=="%echos_last_stack%" ( call:empty_stack & goto:eof )
 
 set "tokens_count=1"
