@@ -116,7 +116,14 @@ if "%ECHO_STATE%"=="ON" (@echo on)
 goto:eof
 
 :compute_prefix_stack
-if not defined ECHOS_STACK ( goto:eof )
+if not defined ECHOS_STACK (
+  if defined CURRENT_SCRIPT (
+    set "prefix_stack=[%CURRENT_SCRIPT%] "
+  ) else (
+    set "prefix_stack="
+  )
+  goto:eof
+)
 call:read_stack
 call:compute_stack_warning "%~1"
 set "echos_stack_spaces="
@@ -150,6 +157,7 @@ if defined echos_last_stack ( set "prefix_stack=%prefix_stack%⁅%echos_last_sta
 goto:eof
 
 :stack
+if not defined ECHOS_STACK ( goto:eof )
 call:read_stack
 rem set "ECHOS_STACK"
 if not defined echos_stack_list (
@@ -166,6 +174,7 @@ echo %echos_stack_list%>"%echos_stack_file%"
 goto:eof
 
 :empty_stack
+if not defined ECHOS_STACK ( goto:eof )
 %CHECK_DEBUG_ECHOS% echo :empty_stack
 set "echos_stack_list="
 set "echos_last_stack="
@@ -175,6 +184,7 @@ verify >nul
 goto:eof
 
 :unstack
+if not defined ECHOS_STACK ( goto:eof )
 call:read_stack
 if not defined echos_stack_list ( call:empty_stack & goto:eof )
 if not "%~1"=="" (
@@ -209,6 +219,7 @@ verify >nul
 goto:eof
 
 :read_stack
+if not defined ECHOS_STACK ( goto:eof )
 call:get_stack_filename
 set "echos_stack_list="
 set "echos_stack_list_count=0"
@@ -232,6 +243,7 @@ if not defined echos_last_stack ( set "echos_last_stack=%echos_stack_list%" )
 goto:eof
 
 :compute_stack_warning
+if not defined ECHOS_STACK ( goto:eof )
 set "echos_stack_warning_no_stack="
 set "echos_stack_warning_wrong_stack="
 set "echos_stack_warning_legacy_stack="
@@ -254,6 +266,7 @@ rem , echos_stack_warning_wrong_stack='%echos_stack_warning_wrong_stack%'
 goto:eof
 
 :get_stack_filename
+if not defined ECHOS_STACK ( goto:eof )
 for %%i in ("%~dp0") do SET "echos_stack_dir=%%~fi"
 set "echos_stack_file=%~nx0"
 set "echos_stack_file=%echos_stack_file:.bat=.stack%"
