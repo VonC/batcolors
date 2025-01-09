@@ -384,11 +384,12 @@ goto:eof
 :set_pre_post_example_FILE
 set "level=%~1"
 call:pre "PRE '%level%' line 1: Write a multi-line message in a file 'echos_pre.txt' or 'echos_post.txt'"
-rem call:pre "PRE '%level%' line 2: use the ％_pre％ and ％_post％ macros to write those files for you.
+call:pre "PRE '%level%' line 2: Or use the ％_pre％ and ％_post％ macros to write those files for you."
 call:pre "PRE '%level%' line 3: '_' means empty line. Example of empty line:"
 call:pre _
 call:post _
 call:post "POST '%level%' line 2: line 1 was '_', so empty"
 call:post "POST '%level%' line 3: 'echos_pre.txt'  means the lines are displayed BEFORE the '%level%' message"
 call:post "POST '%level%' line 4: 'echos_post.txt' means the lines are displayed AFTER  the '%level%' message"
+call:post "POST '%level%' line 5: The files 'echos_pre/post.txt' are deleted right after the ％_ok/info/...％ call"
 goto:eof
