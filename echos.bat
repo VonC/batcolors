@@ -199,7 +199,6 @@ goto:eof
 :reset_pre_post_var_and_file
 if exist "echos_pre.txt"  ( del "echos_pre.txt" )
 if exist "echos_post.txt"  ( del "echos_post.txt" )
-set "NOCOLORS="
 goto:eof
 
 :unstack
@@ -349,6 +348,7 @@ if defined echos_standalone (
   )
 )
 call:reset_pre_post_var_and_file
+set "NOCOLORS="
 if not "%FATALNOEXIT%"=="" goto:eof
 if not exist "%temp%\ExitBatchYes.txt" call :buildYes
 call :CtrlC <"%temp%\ExitBatchYes.txt" 1>nul 2>&1
