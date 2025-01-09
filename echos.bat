@@ -298,7 +298,8 @@ goto:eof
 
 :test
 set "CHECK_DEBUG_ECHOS=echo %DEBUG_ECHOS% | findstr /C:true >nul &&
-set NOCOLORS=
+set "ECHOS_STACK="
+set "NOCOLORS="
 set FATALNOEXIT=1
 call:ok "Result matches what was expected"
 call:info "Describe what is about to be done"
@@ -320,12 +321,16 @@ call:task "(no colors) Result means you need to take action"
 call:error "(no colors) Result is wrong"
 call:fatal "(no colors) The program must exit and stop" 2
 echo ---- PRE and POST MSG VARS ----
-set NOCOLORS=
+set "NOCOLORS="
 call:set_pre_post_example_FILE "OK"
 call:ok "An OK message with a prefix and a post message" && echo.
 echo ---- NOCOLORS=1 with PRE and POST MSG ----
-set NOCOLORS=1
-set FATALNOEXIT=
+set "NOCOLORS=1"
+set "FATALNOEXIT="
+endlocal
+call "echos_macros.bat" unset
+set "NOCOLORS=1"
+set "FATALNOEXIT="
 call:set_pre_post_example_FILE "FATAL"
 call:fatal "A FATAL message (no colors) with a prefix and a post message" 1
 echo alldone
@@ -337,14 +342,13 @@ rem => https://stackoverflow.com/questions/3227796/exit-batch-script-from-inside
 
 :ExitBatch - Cleanly exit batch processing, regardless how many CALLs
 @echo off
-set "CHECK_DEBUG_ECHOS=
+set "CHECK_DEBUG_ECHOS="
 if defined echos_standalone (
   if exist "%echos_standalone%" (
     del "%echos_standalone%"
   )
 )
-if exist echo_pre.txt del echo_pre.txt
-if exist echo_post.txt del echo_post.txt
+call:reset_pre_post_var_and_file
 if not "%FATALNOEXIT%"=="" goto:eof
 if not exist "%temp%\ExitBatchYes.txt" call :buildYes
 call :CtrlC <"%temp%\ExitBatchYes.txt" 1>nul 2>&1
