@@ -58,7 +58,17 @@ Then, unset it (`set FATALNOEXIT=`), and the next `%_fatal%` call will exit the 
 
 ### PRE-POST multi-line messages
 
-If you want to display a multi-line message, use `ECHOS_PRE_FILE` and `ECHOS_POST_FILE` referencing a file full pathname with a multi-line message in it.
+If you want to display a multi-line message, use `%_pre%` and `%_pro%` macros to define multiline pre or post messages
+
+```bat
+%_post% POST INFO line 1: Write a post-message after the INFO message
+%_post% POST INFO line 2
+%_info% My INFO message with post lines
+```
+
+You can use both `%_pre%` and `%_post%` macros to display lines before *and* after an `%_ok/info/...%`
+
+Or use the file `echos_pre.txt` or  `echos_post.txt` or both: it will be deleted right after the next `%_ok/info/...%`.
 
 ```bat
 (
@@ -66,11 +76,9 @@ echo PRE OK line 1: Write a multi-line message in a file 'xxx.txt'
 echo PRE OK line 2: the name of that file is yours to chose
 echo PRE OK line 3: '_' means empty line
 echo _
-) > "pre_FILE.txt"
-set "ECHOS_PRE_FILE=pre_FILE.txt"
-%_ok% " An OK message with a prefix message"
-REM don't forget to reset the variable
-set "ECHOS_PRE_FILE=
+) > "echos_pre.txt"
+%_ok% " An OK message with prefix lines"
+REM The 'echos_pre.txt' file is automatically deleted after any %_ok%, %_info%, %_warning%,... call
 ```
 ### export
 
@@ -95,6 +103,49 @@ If your script includes a `@echo on`, having `ECHO_STATE=ON` first will make sur
 ```bat
 cmd /V /C "set "ECHO_STATE=ON" && call your_script.bat"
 ```
+
+## [Script name prefix]
+
+Add the following function to your current script, and any `%_ok/info/...%` will start with `[script name.bat] your message...`:
+
+```bat
+:call_echos_stack
+if not defined ECHOS_STACK ( set "CURRENT_SCRIPT=%~nx0" & goto:eof ) else ( call "%project_dir%\tools\batcolors\echos.bat" :stack %~nx0 )
+goto:eof
+```
+
+Adjust the `%project_dir%\tools\batcolors` path to where your batcolors repository is cloned.
+
+Example:
+
+```bash
+ OK    : [init.bat] Submodule already initialized
+ OK    : [senv.bat] project 'cplx' senv activated [local preserved]: project_dir='C:\Users\VonC\git\cplx'
+ INFO  : [t_build.bat] build_params for build: ''
+ INFO  : [t_build.bat] build_params for update-version (rel for 'make release'): ''
+ TASK=>: [update-version.bat] Must get version from 'C:\Users\VonC\git\cplx\version.txt'
+ OK    : [update-version.bat] version '0.2.0-SNAPSHOT' found in 'C:\Users\VonC\git\cplx\version.txt'
+ ```
+
+Each script (`senv.bat`, `t_build.bat`, `update-version.bat`, ...) has the same `:call_echos_stack` in their respective file.
+
+## Callstack ("Stack")
+
+If you use `set "ECHOS_STACK=true"`, those same script-name prefixed message will be displayed with indentation reflecting the callstack.
+
+Example:
+
+```bash
+ OK    :   ⁅init.bat⁆ Submodule already initialized
+ OK    : ⁅senv.bat⁆ project 'cplx' senv activated [local preserved]: project_dir='C:\Users\VonC\git\cplx'
+ INFO  : ⁅t_build.bat⁆ build_params for build: ''
+ INFO  : ⁅t_build.bat⁆ build_params for update-version (rel for 'make release'): ''
+ TASK=>:   ⁅update-version.bat⁆ Must get version from 'C:\Users\VonC\git\cplx\version.txt'
+ OK    :   ⁅update-version.bat⁆ version '0.2.0-SNAPSHOT' found in 'C:\Users\VonC\git\cplx\version.txt'
+ INFO  :   ⁅update-version.bat⁆ is_snapshot='1', is_release='', version_release='0.2.0'
+```
+
+This is slower (each message takes more time to be displayed), but it can help debug the callstack of multiple bat scripts.
 
 ## License: MIT
 
