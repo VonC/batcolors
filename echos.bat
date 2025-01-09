@@ -183,8 +183,30 @@ del %echos_stack_file% 2>NUL
 verify >nul
 goto:eof
 
+:pre
+for %%i in (%*) do (
+    echo %%~i >> echos_pre.txt
+)
+goto:eof
+
+:post
+for %%i in (%*) do (
+    echo %%~i >> echos_post.txt
+)
+goto:eof
+
+:reset_pre_post_var_and_file
+if exist "echos_pre.txt"  ( del "echos_pre.txt" )
+if exist "echos_post.txt"  ( del "echos_post.txt" )
+set "NOCOLORS="
+goto:eof
+
 :unstack
+:: nothing to unstack if ECHOS_STACK is not set
 if not defined ECHOS_STACK ( goto:eof )
+::
+:: unstack the last element of the read stack
+::
 call:read_stack
 if not defined echos_stack_list ( call:empty_stack & goto:eof )
 if not "%~1"=="" (
@@ -348,26 +370,20 @@ set "msg_file=%~1"
 set "msg_prefix=%~2"
 REM for each line in the file, echo the prefix and the line
 for /f "tokens=*" %%a in ('type "%msg_file%"') do (
-  if "%%a"=="_" ( echo %msg_prefix% ) else (
-    echo %msg_prefix%%%a 
+  if "%%a"=="_" ( echo.%msg_prefix% ) else (
+    echo.%msg_prefix%%%a
   )
 )
 goto:eof
 
 :set_pre_post_example_FILE
 set "level=%~1"
-(
-echo PRE '%level%' line 1: Write a multi-line message in a file 'xxx.txt'
-echo PRE '%level%' line 2: the name of that file is yours to chose
-echo PRE '%level%' line 3: '_' means empty line
-echo _
-) > "echo_pre.txt"
-set "ECHOS_PRE_FILE=echo_pre.txt"
-(
-echo _
-echo POST '%level%' line 1: then set ECHOS_PRE_FILE variable  to that file full pathname
-echo POST '%level%' line 2: and / or ECHOS_POST_FILE variable to that file full pathname
-echo POST '%level%' line 3: depending on where you want the message to appear
-) > "echo_post.txt"
-set "ECHOS_POST_FILE=echo_post.txt"
+call:pre "PRE '%level%' line 1: Write a multi-line message in a file 'echos_pre.txt' or 'echos_post.txt'"
+rem call:pre "PRE '%level%' line 2: use the ％_pre％ and ％_post％ macros to write those files for you.
+call:pre "PRE '%level%' line 3: '_' means empty line. Example of empty line:"
+call:pre _
+call:post _
+call:post "POST '%level%' line 2: line 1 was '_', so empty"
+call:post "POST '%level%' line 3: 'echos_pre.txt'  means the lines are displayed BEFORE the '%level%' message"
+call:post "POST '%level%' line 4: 'echos_post.txt' means the lines are displayed AFTER  the '%level%' message"
 goto:eof
