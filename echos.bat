@@ -186,13 +186,13 @@ goto:eof
 
 :pre
 for %%i in (%*) do (
-    echo %%~i >> echos_pre.txt
+    echo %%~i>> echos_pre.txt
 )
 goto:eof
 
 :post
 for %%i in (%*) do (
-    echo %%~i >> echos_post.txt
+    echo %%~i>> echos_post.txt
 )
 goto:eof
 
