@@ -296,6 +296,7 @@ set "echos_stack_file=%echos_stack_dir%\%echos_stack_file%"
 goto:eof
 
 :test
+echo C:\Users\vonc\prgs\senv\batcolors^>echos.bat
 set "CHECK_DEBUG_ECHOS=echo %DEBUG_ECHOS% | findstr /C:true >nul &&
 set "ECHOS_STACK="
 set "NOCOLORS="
@@ -307,10 +308,12 @@ call:task "Result means you need to take action"
 call:error "Result is wrong"
 call:fatal "Program must stop and exit" 1
 echo ---- ENV VARS ----
-call:info "setting ECHOS_OFF=[any value] means no OK, INFO, WARNING, TASK, or ERROR messages will be displayed. Only FATAL messages."
+call:post "  Only FATAL messages will still be displayed."
+call:info "setting ECHOS_OFF=[any value] means no OK, INFO, WARNING, TASK, or ERROR messages will be displayed."
 call:info "setting ECHO_STATE=ON allows for `@echo on` to persists after a batcolor echo"
 call:info "setting FATALNOEXIT=1 allows for a fatal call to not exit the current batch script"
 call:info "setting NOCOLORS=1 allows for ASCII output without ASCII escape color codes"
+call:info "setting ECHOS_STACK=true means messages are indented based on callstack order
 echo ---- NOCOLORS=1 ----
 set NOCOLORS=1
 call:ok "(no colors) Result matches what was expected"
