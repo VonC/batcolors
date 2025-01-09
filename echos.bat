@@ -17,15 +17,15 @@ exit /b
 if defined ECHOS_OFF goto:check_echo_state
 call:compute_prefix_stack %1
 if not "%NOCOLORS%"=="" goto:oknc
-if defined ECHOS_PRE_FILE ( call:msg "%ECHOS_PRE_FILE%" "   %ASCII27%[42;97m    %ASCII27%[0m  " )
+if exist "echos_pre.txt" ( call:msg "echos_pre.txt" "   %ASCII27%[42;97m    %ASCII27%[0m  " )
 echo %ASCII27%[42;97m OK    %ASCII27%[0m: %prefix_stack%%~1%
-if defined ECHOS_POST_FILE ( call:msg "%ECHOS_POST_FILE%" "   %ASCII27%[42;97m    %ASCII27%[0m  " )
+if exist "echos_post.txt" ( call:msg "echos_post.txt" "   %ASCII27%[42;97m    %ASCII27%[0m  " )
 call:unstack
 goto:check_echo_state
 :oknc
-if defined ECHOS_PRE_FILE ( call:msg "%ECHOS_PRE_FILE%" "       %ASCII27%[0m  " )
+if exist "echos_pre.txt" ( call:msg "echos_pre.txt" "       %ASCII27%[0m  " )
 echo  OK    : %prefix_stack%%~1% 1>&2
-if defined ECHOS_POST_FILE ( call:msg "%ECHOS_POST_FILE%" "       %ASCII27%[0m  " )
+if exist "echos_post.txt" ( call:msg "echos_post.txt" "       %ASCII27%[0m  " )
 call:unstack
 goto:check_echo_state
 
@@ -33,15 +33,15 @@ goto:check_echo_state
 if defined ECHOS_OFF goto:check_echo_state
 call:compute_prefix_stack %1
 if not "%NOCOLORS%"=="" goto:infonc
-if defined ECHOS_PRE_FILE ( call:msg "%ECHOS_PRE_FILE%" "     %ASCII27%[106;30m  %ASCII27%[0m  " )
+if exist "echos_pre.txt" ( call:msg "echos_pre.txt" "     %ASCII27%[106;30m  %ASCII27%[0m  " )
 echo %ASCII27%[106;30m INFO  %ASCII27%[0m: %prefix_stack%%~1%
-if defined ECHOS_POST_FILE ( call:msg "%ECHOS_POST_FILE%" "     %ASCII27%[106;30m  %ASCII27%[0m  " )
+if exist "echos_post.txt" ( call:msg "echos_post.txt" "     %ASCII27%[106;30m  %ASCII27%[0m  " )
 call:unstack
 goto:check_echo_state
 :infonc
-if defined ECHOS_PRE_FILE ( call:msg "%ECHOS_PRE_FILE%" "       %ASCII27%[0m  " )
+if exist "echos_pre.txt" ( call:msg "echos_pre.txt" "       %ASCII27%[0m  " )
 echo  INFO  : %prefix_stack%%~1% 1>&2
-if defined ECHOS_POST_FILE ( call:msg "%ECHOS_POST_FILE%" "       %ASCII27%[0m  " )
+if exist "echos_post.txt" ( call:msg "echos_post.txt" "       %ASCII27%[0m  " )
 call:unstack
 goto:check_echo_state
 
@@ -49,15 +49,15 @@ goto:check_echo_state
 if defined ECHOS_OFF goto:check_echo_state
 call:compute_prefix_stack %1
 if not "%NOCOLORS%"=="" goto:warningnc
-if defined ECHOS_PRE_FILE ( call:msg "%ECHOS_PRE_FILE%" "     %ASCII27%[103;30m  %ASCII27%[0m  " )
+if exist "echos_pre.txt" ( call:msg "echos_pre.txt" "     %ASCII27%[103;30m  %ASCII27%[0m  " )
 echo %ASCII27%[103;30m WARN  %ASCII27%[0m: %prefix_stack%%~1%
-if defined ECHOS_POST_FILE ( call:msg "%ECHOS_POST_FILE%" "     %ASCII27%[103;30m  %ASCII27%[0m  " )
+if exist "echos_post.txt" ( call:msg "echos_post.txt" "     %ASCII27%[103;30m  %ASCII27%[0m  " )
 call:unstack
 goto:check_echo_state
 :warningnc
-if defined ECHOS_PRE_FILE ( call:msg "%ECHOS_PRE_FILE%" "       %ASCII27%[0m  " )
+if exist "echos_pre.txt" ( call:msg "echos_pre.txt" "       %ASCII27%[0m  " )
 echo  WARN  : %prefix_stack%%~1% 1>&2
-if defined ECHOS_POST_FILE ( call:msg "%ECHOS_POST_FILE%" "       %ASCII27%[0m  " )
+if exist "echos_post.txt" ( call:msg "echos_post.txt" "       %ASCII27%[0m  " )
 call:unstack
 goto:check_echo_state
 
@@ -65,15 +65,15 @@ goto:check_echo_state
 if defined ECHOS_OFF goto:check_echo_state
 call:compute_prefix_stack %1
 if not "%NOCOLORS%"=="" goto:tasknc
-if defined ECHOS_PRE_FILE ( call:msg "%ECHOS_PRE_FILE%" "     %ASCII27%[103;30m  %ASCII27%[0m  " )
+if exist "echos_pre.txt" ( call:msg "echos_pre.txt" "     %ASCII27%[103;30m  %ASCII27%[0m  " )
 echo %ASCII27%[106;30m TASK%ASCII27%[0m%ASCII27%[103;30m=^>%ASCII27%[0m: %prefix_stack%%~1%
-if defined ECHOS_POST_FILE ( call:msg "%ECHOS_POST_FILE%" "     %ASCII27%[103;30m  %ASCII27%[0m  " )
+if exist "echos_post.txt" ( call:msg "echos_post.txt" "     %ASCII27%[103;30m  %ASCII27%[0m  " )
 call:unstack
 goto:check_echo_state
 :tasknc
-if defined ECHOS_PRE_FILE ( call:msg "%ECHOS_PRE_FILE%" "       %ASCII27%[0m  " )
+if exist "echos_pre.txt" ( call:msg "echos_pre.txt" "       %ASCII27%[0m  " )
 echo  TASK=^>: %prefix_stack%%~1% 1>&2
-if defined ECHOS_POST_FILE ( call:msg "%ECHOS_POST_FILE%" "       %ASCII27%[0m  " )
+if exist "echos_post.txt" ( call:msg "echos_post.txt" "       %ASCII27%[0m  " )
 call:unstack
 goto:check_echo_state
 
@@ -81,38 +81,39 @@ goto:check_echo_state
 if defined ECHOS_OFF goto:check_echo_state
 call:compute_prefix_stack %1
 if not "%NOCOLORS%"=="" goto:errornc
-if defined ECHOS_PRE_FILE ( call:msg   "%ECHOS_PRE_FILE%" "      %ASCII27%[101;97m %ASCII27%[0m  " )
+if exist "echos_pre.txt" ( call:msg   "echos_pre.txt" "      %ASCII27%[101;97m %ASCII27%[0m  " )
 echo %ASCII27%[101;97m ERROR %ASCII27%[0m: %prefix_stack%%prefix%%~1% 1>&2
-if defined ECHOS_POST_FILE ( call:msg "%ECHOS_POST_FILE%" "      %ASCII27%[101;97m %ASCII27%[0m  " )
+if exist "echos_post.txt" ( call:msg "echos_post.txt" "      %ASCII27%[101;97m %ASCII27%[0m  " )
 call:unstack
 goto:check_echo_state
 :errornc
-if defined ECHOS_PRE_FILE ( call:msg "%ECHOS_PRE_FILE%" "       %ASCII27%[0m  " )
+if exist "echos_pre.txt" ( call:msg "echos_pre.txt" "       %ASCII27%[0m  " )
 echo  ERROR : %prefix_stack%%~1% 1>&2
-if defined ECHOS_POST_FILE ( call:msg "%ECHOS_POST_FILE%" "       %ASCII27%[0m  " )
+if exist "echos_post.txt" ( call:msg "echos_post.txt" "       %ASCII27%[0m  " )
 call:unstack
 goto:check_echo_state
 
 :fatal
 if not "%NOCOLORS%"=="" goto:fatalnc
 call:compute_prefix_stack %1
-if defined ECHOS_PRE_FILE ( call:msg "%ECHOS_PRE_FILE%" "      %ASCII27%[41;97m %ASCII27%[0m  " )
+if exist "echos_pre.txt" ( call:msg "echos_pre.txt" "      %ASCII27%[41;97m %ASCII27%[0m  " )
 rem %Windir%\System32\WindowsPowerShell\v1.0\Powershell.exe write-host -foregroundcolor Red ERROR: %1
 echo %ASCII27%[41;97m FATAL %~2 %ASCII27%[0m: %prefix_stack%%~1% 1>&2
-if defined ECHOS_POST_FILE ( call:msg "%ECHOS_POST_FILE%" "      %ASCII27%[41;97m %ASCII27%[0m  " )
+if exist "echos_post.txt" ( call:msg "echos_post.txt" "      %ASCII27%[41;97m %ASCII27%[0m  " )
 call:unstack
 call :ExitBatch %2
 goto:eof
 :fatalnc
-if defined ECHOS_PRE_FILE ( call:msg "%ECHOS_PRE_FILE%" "       %ASCII27%[0m  " )
+if exist "echos_pre.txt" ( call:msg "echos_pre.txt" "         " )
 echo  FATAL %~2 : %prefix_stack%%~1% 1>&2
-if defined ECHOS_POST_FILE ( call:msg "%ECHOS_POST_FILE%" "       %ASCII27%[0m  " )
+if exist "echos_post.txt" ( call:msg "echos_post.txt" "         " )
 call:unstack
 call :ExitBatch %2
 goto:eof
 
 :check_echo_state
 if "%ECHO_STATE%"=="ON" (@echo on)
+call:reset_pre_post_var_and_file
 goto:eof
 
 :compute_prefix_stack
