@@ -96,10 +96,10 @@ goto:check_echo_state
 :fatal
 if not "%NOCOLORS%"=="" goto:fatalnc
 call:compute_prefix_stack %1
-if exist "echos_pre.txt" ( call:msg "echos_pre.txt" "      %ASCII27%[41;97m %ASCII27%[0m  " )
+if exist "echos_pre.txt" ( call:msg "echos_pre.txt" "       %ASCII27%[41;97m%~2 %ASCII27%[0m  " )
 rem %Windir%\System32\WindowsPowerShell\v1.0\Powershell.exe write-host -foregroundcolor Red ERROR: %1
 echo %ASCII27%[41;97m FATAL %~2 %ASCII27%[0m: %prefix_stack%%~1% 1>&2
-if exist "echos_post.txt" ( call:msg "echos_post.txt" "      %ASCII27%[41;97m %ASCII27%[0m  " )
+if exist "echos_post.txt" ( call:msg "echos_post.txt" "       %ASCII27%[41;97m%~2 %ASCII27%[0m  " )
 call:unstack
 call :ExitBatch %2
 goto:eof
