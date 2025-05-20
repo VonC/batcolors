@@ -104,23 +104,46 @@ If your script includes a `@echo on`, having `ECHO_STATE=ON` first will make sur
 cmd /V /C "set "ECHO_STATE=ON" && call your_script.bat"
 ```
 
-## [Script name prefix]
+## `[Script name prefix]`
+
+### Prerequisite: define `PRJ_DIR` in your project
+
+The `senv.bat` from your project must define the `PRJ_DIR` variable, which is the root of your project.
+
+The `senv.bat` should include:
+
+```bat
+for %%i in ("%~dp0") do SET "PRJ_DIR=%%~fi"
+set "PRJ_DIR=%PRJ_DIR:~0,-1%"
+for %%i in ("%PRJ_DIR%") do SET "PRJ_DIR_NAME=%%~nxi"
+
+if defined NO_MORE_SENV_%PRJ_DIR_NAME% ( goto:eof )
+...
+REM your senv.bat project-specific content
+...
+REM Set project-specific flag when done
+set "NO_MORE_SENV_%PRJ_DIR_NAME%=true"
+```
+
+Here, the `set "PRJ_DIR=%PRJ_DIR:~0,-1%"` line is important for batcolors to find the `echos.bat` file of batcolors (from within a script from your project), as shown in the next section.
+
+### Use `PRJ_DIR` in a `call_echos_stack` function
 
 Add the following function to your current script, and any `%_ok/info/...%` will start with `[script name.bat] your message...`:
 
 ```bat
 :call_echos_stack
-if not defined ECHOS_STACK ( set "CURRENT_SCRIPT=%~nx0" & goto:eof ) else ( call "%project_dir%\tools\batcolors\echos.bat" :stack %~nx0 )
+if not defined ECHOS_STACK ( set "CURRENT_SCRIPT=%~nx0" & goto:eof ) else ( call "%PRJ_DIR%\tools\batcolors\echos.bat" :stack %~nx0 )
 goto:eof
 ```
 
-Adjust the `%project_dir%\tools\batcolors` path to where your batcolors repository is cloned.
+Adjust the `%PRJ_DIR%\tools\batcolors` path to where your batcolors repository is cloned.
 
-Example:
+When running your scripts with their own `call_echos_stack` function, you will see the script name in the output, as in this example:
 
 ```bash
  OK    : [init.bat] Submodule already initialized
- OK    : [senv.bat] project 'cplx' senv activated [local preserved]: project_dir='C:\Users\VonC\git\cplx'
+ OK    : [senv.bat] project 'cplx' senv activated [local preserved]: PRJ_DIR='C:\Users\VonC\git\cplx'
  INFO  : [t_build.bat] build_params for build: ''
  INFO  : [t_build.bat] build_params for update-version (rel for 'make release'): ''
  TASK=>: [update-version.bat] Must get version from 'C:\Users\VonC\git\cplx\version.txt'
@@ -137,7 +160,7 @@ Example:
 
 ```bash
  OK    :   ⁅init.bat⁆ Submodule already initialized
- OK    : ⁅senv.bat⁆ project 'cplx' senv activated [local preserved]: project_dir='C:\Users\VonC\git\cplx'
+ OK    : ⁅senv.bat⁆ project 'cplx' senv activated [local preserved]: PRJ_DIR='C:\Users\VonC\git\cplx'
  INFO  : ⁅t_build.bat⁆ build_params for build: ''
  INFO  : ⁅t_build.bat⁆ build_params for update-version (rel for 'make release'): ''
  TASK=>:   ⁅update-version.bat⁆ Must get version from 'C:\Users\VonC\git\cplx\version.txt'
