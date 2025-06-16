@@ -1,1 +1,3 @@
 *.bat	text eol=crlf
+*.sh text eol=lf
+echos* text eol=lf
