@@ -112,8 +112,8 @@ call :ExitBatch %2
 goto:eof
 
 :check_echo_state
-if "%ECHO_STATE%"=="ON" (@echo on)
 call:reset_pre_post_var_and_file
+if "%ECHO_STATE%"=="ON" (@echo on)
 goto:eof
 
 :compute_prefix_stack
