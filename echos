@@ -14,12 +14,21 @@ if [[ "${FROM_UNIX}" != "" ]]; then
   warncols="103;30"
   errorcols="101;30"
 fi
+
+# Variable to store the parent folder name, initialized only once
+if [[ -z "${echos_parent_folder}" ]]; then
+  # Get the directory containing the echos script
+  echos_script_dir="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
+  # Get the parent folder name
+  echos_parent_folder="$(basename "$(dirname "${echos_script_dir}")")"
+fi
+
 function caller() {
   local i=0
   local path
   while [ -n "${BASH_SOURCE[$i]}" ]; do
     path="${BASH_SOURCE[$i]}"
-    if [[ "$path" == *"/echos/"* ]]; then
+    if [[ "$path" == *"/${echos_parent_folder}/"* ]]; then
       ((i++))
     else
       break
@@ -27,6 +36,7 @@ function caller() {
   done
   caller="$(basename "$path")"
 }
+
 function mlog() { if [[ "${2}" != "" ]]; then eval "${2}=\"\${${2}}\n\${1}\""; fi; }
 function spaces() { caller; if [[ ${depth} -gt 0 ]]; then printf %${depth}s; fi; }
 function ok() { spaces; echo -e "\e[42;97m Ok    \e[0m: [${caller}] ${1}"; mlog "ok: ${1}" "${2}"; }
