@@ -43,6 +43,7 @@ function ok() { spaces; echo -e "\e[42;97m Ok    \e[0m: [${caller}] ${1}"; mlog 
 function info() { spaces; echo -e "\e[${infocols}m Info  \e[0m: [${caller}] ${1}"; mlog "info: ${1}" "${2}"; }
 function task() { spaces; echo -e "\e[${infocols}m Task\e[0m\e[${warncols}m=>\e[0m: [${caller}] ${1}"; mlog "Task: ${1}" "${2}"; }
 function warning() { spaces; echo -e "\e[${warncols}m Warn  \e[0m: [${caller}] ${1}"; mlog "Warning: ${1}" "${2}"; }
+function warn() { warning "$@"; }
 function error() { spaces; echo -e "\e[${errorcols}m Error \e[0m: [${caller}] ${1}"; mlog "ERROR: ${1}" "${2}"; }
 function fatal() { spaces; echo -e "\e[41;97m FATAL [${2}]\e[0m: [${caller}] ${1}"; mlog "FATAL: ${1}" "${3}"; exit "${2}"; }
 
