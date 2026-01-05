@@ -26,9 +26,16 @@ fi
 function caller() {
   local i=0
   local path
+  # BASH_SOURCE[0] is the file containing this function ('caller').
+  # We want to skip all stack frames that originate from this same file (echos).
+  local this_file="${BASH_SOURCE[0]}"
+
   while [ -n "${BASH_SOURCE[$i]}" ]; do
     path="${BASH_SOURCE[$i]}"
-    if [[ "$path" == *"/${echos_parent_folder}/"* ]]; then
+    # Compare directly against the file defining this function.
+    # This works regardless of relative/absolute paths or symlinks,
+    # as long as BASH_SOURCE is consistent within the stack.
+    if [[ "$path" == "$this_file" ]]; then
       ((i++))
     else
       break
